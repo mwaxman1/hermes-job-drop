@@ -14,7 +14,7 @@ jobs:
       - name: Privacy audit (fails on any personal-data pattern in tracked files)
         run: python3 scripts/audit_no_personal_data.py
       - name: Install test deps
-        run: python3 -m pip install pytest pyyaml
+        run: python3 -m pip install pytest pyyaml pypdf
       - name: Tests
         run: python3 -m pytest tests/ -q
       - name: Installer smoke test (throwaway HOME)

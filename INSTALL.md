@@ -14,12 +14,12 @@ Optional Python packages (the kit works without them; features that need them sa
 
 | Package | Used for |
 |---|---|
-| `pypdf` (or `pdfplumber`) | Extracting text from PDF resumes during profile ingestion |
-| `python-docx` | Extracting text from DOCX documents during profile ingestion |
+| `pypdf` (or `pdfplumber`, or poppler's `pdftotext` command) | Extracting text from PDF resumes during profile ingestion. Without any of them, PDFs are skipped with a message |
+| `python-docx` | DOCX reading during ingestion. Optional: DOCX/ODT are also read with the standard library |
 | `weasyprint` | Fallback PDF renderer if Chrome is unavailable (needs pango/cairo system libraries) |
 
 ```bash
-python3 -m pip install --user pyyaml pypdf python-docx
+python3 -m pip install --user pyyaml pypdf
 ```
 
 ## 2. Run the installer
@@ -62,6 +62,13 @@ writing samples, an HTML resume, or a `profile.yaml`/`.json` you already keep (u
 writes a **draft** to `~/.hermes/jobdrop/profile.yaml` and reports every field it could not
 ground — it never invents a contact detail or a claim. Review the draft once; after that it is
 the single source of truth for every application.
+
+- Contact details are taken only from resume-like documents; cover letters and writing
+  samples are listed as style references and never mined for facts.
+- Every extracted role is marked `core: true` (always shown). Set `core: false` on roles the
+  resume may drop for space.
+- Re-running on the same folder gives the same draft. It will not overwrite a `profile.yaml`
+  you have edited unless you pass `--force` (or `--out` another path; `--out -` prints it).
 
 Manual path: copy `~/.hermes/jobdrop/profile.template.yaml` to `profile.yaml` and fill it in.
 Mark your important roles `core: true` — they will appear on every resume, and the build

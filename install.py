@@ -70,7 +70,6 @@ def install(force):
 def print_next_steps(data, skill):
     s = tilde(skill)
     d = tilde(data)
-    ingest = skill / "scripts" / "ingest_profile.py"
     print(f"""
 Getting to your first application
 ---------------------------------
@@ -78,13 +77,7 @@ Getting to your first application
    or an existing profile.yaml). It drafts your profile from them:
 
      python3 {s}/scripts/ingest_profile.py ~/path/to/your-resumes
-""", end="")
-    if not ingest.exists():
-        print(f"""
-   (The ingestion engine is not in this build yet. Until it is, copy
-    {d}/profile.template.yaml to {d}/profile.yaml and fill it in by hand.)
-""", end="")
-    print(f"""
+
 2. Review {d}/profile.yaml once. Everything in it is what the kit may claim about you;
    anything empty is a question it will ask you, never a guess.
 

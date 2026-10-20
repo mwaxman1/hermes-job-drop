@@ -33,6 +33,7 @@ summary sentence appears in (or is a shortening of) the profile summary.
 | `SKILLS` | html | one `<p class="skill-line"><strong>Group:</strong> a, b</p>` per group |
 | `EDUCATION` | html | one `.role`-shaped block per entry |
 | `CERTIFICATIONS` | html | one `<p class="cert">Name — Issuer, Year</p>` per entry |
+| `FIRST_NAME`, `LAST_NAME`, `EMAIL`, `PHONE`, `CITY`, `STATE`, `LOCATION`, `LINKEDIN`, `GITHUB`, `PORTFOLIO` | text | the single profile value, for templates that lay out contact details themselves |
 
 Tokens are written with double braces in the template (e.g. the token `SUMMARY`). Text
 tokens are HTML-escaped. A `<section data-optional>` whose token renders empty is removed so
@@ -50,6 +51,23 @@ Role block shape:
 </div>
 ```
 
+## Commands
+
+```bash
+# tailored to a job (the `resume` slot picks bullet ids):
+python3 $KIT/scripts/build_resume.py --jd "$APP/jd.json" --out "$APP/resume.pdf"
+# untailored (every verified bullet, profile order) — also the template preview:
+python3 $KIT/scripts/build_resume.py --out /tmp/preview/resume.pdf
+# a selection decided elsewhere, same validation:
+python3 $KIT/scripts/build_resume.py --selection sel.json --out "$APP/resume.pdf"
+# list unknown tokens with line numbers (the build still runs):
+python3 $KIT/scripts/build_resume.py --warn-unknown-tokens --html-only --out /tmp/preview/resume.pdf
+```
+
+If the `resume` slot is unreachable the builder warns and falls back to every verified bullet
+in profile order — still truthful, just untailored. Bullet ids are `r<role>b<bullet>`,
+counted from 0 in profile order.
+
 ## Rendering to PDF — Chrome
 
 The user's Chrome is already required for driving forms, so it renders the PDF too (no extra
@@ -65,8 +83,9 @@ rm -rf "$UD"
 
 - `--no-pdf-header-footer` is required: without it Chrome stamps the date and the local file
   path on every page — a path that can contain the user's home directory name.
-- `timeout 60` guards against a hung Chrome. Headless Chrome sometimes writes the PDF and
-  then does not exit; a timeout with a complete PDF on disk is fine — check the file.
+- `timeout 60` guards against a hung Chrome. Headless Chrome often writes the PDF and then
+  does not exit; `build_resume.py` stops it as soon as the PDF on disk is complete, and kills
+  the whole process group at 60 s.
 - Chrome binary names: `google-chrome`, `google-chrome-stable`, `chromium`, `chromium-browser`;
   on macOS `"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"`.
 - Fallback when Chrome is unavailable: WeasyPrint (`weasyprint in.html out.pdf`) if installed.

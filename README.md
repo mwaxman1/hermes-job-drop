@@ -54,7 +54,7 @@ Details, model picking and troubleshooting: [INSTALL.md](INSTALL.md).
 | Path | What |
 |---|---|
 | `hermes-job-drop/` | The Hermes skill: `SKILL.md` (the procedure) + `references/` (ATS shapes, grounding, captchas, letter gates, resume builder, recording, troubleshooting) |
-| `scripts/` | The engine (config + model slots, privacy audit; resume/letter/ledger engine) |
+| `scripts/` | The engine: profile ingestion, model slots, JD extraction, resume + cover-letter builders, field matching, the ledger, the privacy audit |
 | `config/config.template.yaml` | The six model slots, documented |
 | `templates/` | Profile schema, resume HTML template, cover-letter template — copied to `~/.hermes/jobdrop/` for you to edit |
 | `examples/` | A synthetic persona and a filled-in config to try things with |
@@ -62,10 +62,10 @@ Details, model picking and troubleshooting: [INSTALL.md](INSTALL.md).
 
 ## Status
 
-The kit (skill doctrine, templates, config, installer, privacy audit) is in place. The engine
-scripts for profile ingestion, resume/letter building and the ledger are landing next; until
-then the skill performs those steps by hand following its references, and the installer tells
-you how to create your profile manually.
+The doctrine and the engine are in place: profile ingestion from a folder, per-slot model
+config, JD extraction, the tailored resume (Chrome-rendered PDF), the gated cover letter, and
+the ledger. Form driving uses the Hermes Chrome tools; a stand-alone CDP fallback driver
+(`scripts/chrome_cdp.py`) is planned but not yet built.
 
 ## License
 

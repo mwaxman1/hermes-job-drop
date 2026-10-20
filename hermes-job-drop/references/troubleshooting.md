@@ -12,6 +12,16 @@
 | `PyYAML is required` | Python without PyYAML | `python3 -m pip install --user pyyaml` |
 | The bot ignores the link | Bot not mentioned, or the skill not installed | Mention the bot in the same message; check `~/.hermes/skills/hermes-job-drop/SKILL.md` exists |
 
+## Profile ingestion
+
+| Symptom | Fix |
+|---|---|
+| `skipped: x.pdf (no PDF reader …)` | `python3 -m pip install --user pypdf` (or install poppler's `pdftotext`), re-run |
+| `skipped: x.pdf (no extractable text — a scanned image?)` | The PDF is a picture of text. Export a text PDF/DOCX from the original, or fill those fields by hand |
+| `profile.yaml exists and differs from this draft` | Your reviewed profile is protected. `--out -` to see the new draft, `--force` to replace it |
+| A role's title and employer are swapped | Listed under "Check these" in the report — fix it in the draft; the order on resumes varies |
+| Two values for the same contact field | Listed under "Check these"; the first file (alphabetical) won. Fix the draft if it is the wrong one |
+
 ## Documents
 
 | Symptom | Fix |
