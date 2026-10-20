@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<!--
+  hermes-job-drop resume template — single column, ATS-friendly, print-ready (US Letter).
+
+  Rendered to PDF by Chrome:  google-chrome --headless=new --no-pdf-header-footer
+    --user-data-dir=<throwaway dir> --print-to-pdf=out.pdf resume.filled.html
+
+  The builder replaces double-brace tokens. Plain-text tokens are HTML-escaped; block tokens
+  are HTML the builder generates with the classes styled below.
+    plain:  FULL_NAME  HEADLINE  CONTACT_LINE  SUMMARY
+    block:  EXPERIENCE      <div class="role"><div class="role-head"><span class="role-title">Title</span>
+                              <span class="role-dates">2021 – Present</span></div>
+                              <div class="role-sub"><span class="role-employer">Employer</span> · Location</div>
+                              <ul><li>bullet</li></ul></div>  (one per role)
+            SKILLS          <p class="skill-line"><strong>Group:</strong> a, b, c</p>  (one per group)
+            EDUCATION       same shape as a role, with an optional <ul> of details
+            CERTIFICATIONS  <p class="cert">Name — Issuer, Year</p>  (one per cert)
+  A <section data-optional> whose token renders empty is removed, so no heading ever
+  appears without content under it. Replace this file freely; unknown tokens only warn.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{{FULL_NAME}} — Resume</title>
+<style>
+  @page { size: Letter; margin: 0.55in 0.65in; }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body {
+    margin: 0;
+    font-family: "Helvetica Neue", Helvetica, Arial, "Liberation Sans", sans-serif;
+    font-size: 10.5pt;
+    line-height: 1.32;
+    color: #1a1a1a;
+    overflow-wrap: anywhere;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  header { margin-bottom: 6pt; }
+  h1 { font-size: 22pt; font-weight: 700; letter-spacing: 0.2pt; line-height: 1.1; margin: 0; }
+  .headline { font-size: 11.5pt; color: #3b4a5a; margin-top: 2pt; }
+  .contact { font-size: 9.5pt; color: #444; margin-top: 5pt; }
+
+  section { margin-top: 9pt; }
+  h2 {
+    font-size: 10pt; font-weight: 700; text-transform: uppercase; letter-spacing: 1.1pt;
+    color: #23384d; margin: 0 0 5pt; padding-bottom: 2pt; border-bottom: 0.75pt solid #9aa7b4;
+    break-after: avoid;
+  }
+  .summary { margin: 0; }
+
+  .role { margin-bottom: 6pt; break-inside: avoid; }
+  .role:last-child { margin-bottom: 0; }
+  .role-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12pt; }
+  .role-title { font-weight: 700; }
+  .role-dates { white-space: nowrap; font-size: 9.5pt; color: #444; }
+  .role-sub { font-size: 9.5pt; color: #444; margin-top: 0.5pt; }
+  .role-employer { font-weight: 600; color: #1a1a1a; }
+  ul { margin: 2pt 0 0; padding-left: 14pt; }
+  li { margin: 0 0 1pt; padding-left: 1pt; break-inside: avoid; }
+
+  .skill-line, .cert { margin: 0 0 2pt; }
+</style>
+</head>
+<body>
+  <header>
+    <h1>{{FULL_NAME}}</h1>
+    <div class="headline">{{HEADLINE}}</div>
+    <div class="contact">{{CONTACT_LINE}}</div>
+  </header>
+
+  <section data-optional>
+    <h2>Summary</h2>
+    <p class="summary">{{SUMMARY}}</p>
+  </section>
+
+  <section>
+    <h2>Experience</h2>
+    {{EXPERIENCE}}
+  </section>
+
+  <section data-optional>
+    <h2>Skills</h2>
+    {{SKILLS}}
+  </section>
+
+  <section data-optional>
+    <h2>Education</h2>
+    {{EDUCATION}}
+  </section>
+
+  <section data-optional>
+    <h2>Certifications</h2>
+    {{CERTIFICATIONS}}
+  </section>
+</body>
+</html>

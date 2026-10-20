@@ -1,0 +1,28 @@
+# Secrets and local-only files
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+personal-denylist.local.txt
+
+# Personal data and generated artifacts never belong in this repo.
+# Your real profile, config, templates and ledger live in ~/.hermes/jobdrop/, not here.
+*.pdf
+*.docx
+*.odt
+*.db
+*.sqlite
+*.sqlite3
+data/
+out/
+profile.yaml
+config.yaml
+
+# Python / tooling
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/

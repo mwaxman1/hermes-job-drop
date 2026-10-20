@@ -1,0 +1,84 @@
+# hermes-job-drop — master profile (the VERIFIED source of truth about you).
+#
+# Lives at ~/.hermes/jobdrop/profile.yaml. Never commit your filled-in copy anywhere public.
+#
+# Fastest path: don't fill this in by hand. Point the kit at a folder of your existing
+# resumes and documents and it drafts this file for you (see README step 1). Then review it.
+#
+# THE RULE: your resume and cover letters may only claim what is written here. A job
+# description may SELECT among your bullets; it may never REWRITE one or add a new one.
+# Anything left empty is treated as unknown — the kit asks you rather than guessing.
+#
+# Every key below is required to EXIST. Values may be empty ("" or []) until you fill them.
+
+contact:
+  first_name: ""
+  last_name: ""
+  preferred_name: ""          # optional; used in greetings/signature if set
+  email: ""
+  phone: ""                   # as you want it printed, e.g. "+1 555 555 0100"
+  city: ""
+  state: ""                   # state / province / region
+  country: ""
+  postal_code: ""             # only if forms require it; never printed on the resume
+  work_authorization: ""      # your exact answer, e.g. "Authorized to work in the US; no sponsorship needed"
+  willing_to_relocate: ""     # "yes" | "no" | "" (unknown = ask)
+  remote_preference: ""       # "remote" | "hybrid" | "onsite" | "" (unknown = ask)
+
+# One or two sentences. The resume slot may trim this per job but never adds new claims.
+summary: ""
+
+# Optional short headline under your name, e.g. "Senior Data Engineer".
+headline: ""
+
+# Most recent first. Each role is one block.
+experience:
+  - employer: ""
+    title: ""
+    location: ""              # "City, ST" or "Remote"
+    start: ""                 # "YYYY-MM"
+    end: ""                   # "YYYY-MM" or "present"
+    core: true                # core roles MUST appear on every resume; the build fails loudly if one is dropped
+    bullets:                  # verified achievements, written once by you, selected per job
+      - ""
+
+education:
+  - institution: ""
+    degree: ""                # e.g. "B.S. Computer Science"
+    location: ""
+    end: ""                   # "YYYY" or "expected YYYY"
+    details: []               # honors, thesis, relevant coursework
+
+# Grouped skills. Group names are printed as-is.
+skills:
+  - group: ""                 # e.g. "Languages"
+    items: []                 # e.g. ["Python", "SQL"]
+
+certifications:
+  - name: ""
+    issuer: ""
+    year: ""
+
+# Public links only. Each is printed on the resume and offered to forms that ask for it.
+links:
+  linkedin: ""
+  github: ""
+  portfolio: ""
+  other: []
+
+# Answers to questions forms commonly ask. Leave empty and the kit PARKS and asks you —
+# it never guesses these. Use the exact wording you want submitted.
+answers:
+  salary_expectation: ""
+  notice_period: ""
+  how_did_you_hear: ""        # e.g. "Company careers page"
+  # Self-identification questions (voluntary). Fill with the option you want selected,
+  # or "decline" to choose the form's decline-to-answer option. Empty = park and ask.
+  eeo:
+    gender: ""
+    race_ethnicity: ""
+    veteran_status: ""
+    disability_status: ""
+
+# Companies or postings you've already applied to outside the kit, so it never applies twice.
+already_applied: []           # e.g. ["Example Corp — Data Engineer", "https://jobs.example.com/123"]

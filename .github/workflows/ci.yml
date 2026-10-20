@@ -1,0 +1,25 @@
+name: ci
+on:
+  push:
+  pull_request:
+
+jobs:
+  audit-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Privacy audit (fails on any personal-data pattern in tracked files)
+        run: python3 scripts/audit_no_personal_data.py
+      - name: Install test deps
+        run: python3 -m pip install pytest pyyaml
+      - name: Tests
+        run: python3 -m pytest tests/ -q
+      - name: Installer smoke test (throwaway HOME)
+        run: |
+          export HOME="$(mktemp -d)"
+          bash install.sh
+          test -f "$HOME/.hermes/jobdrop/config.yaml"
+          test -f "$HOME/.hermes/skills/hermes-job-drop/SKILL.md"

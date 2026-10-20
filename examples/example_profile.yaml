@@ -1,0 +1,97 @@
+# SYNTHETIC PERSONA — every name, employer, school and contact detail below is invented.
+# Email uses example.com and the phone uses the 555-01xx range reserved for fiction.
+# Use this file to try the kit end to end without touching your own data.
+
+contact:
+  first_name: "Robin"
+  last_name: "Testwell"
+  preferred_name: ""
+  email: "robin.testwell@example.com"
+  phone: "+1 555 555 0142"
+  city: "Lakeview"
+  state: "CO"
+  country: "United States"
+  postal_code: ""
+  work_authorization: "Authorized to work in the US; no sponsorship needed"
+  willing_to_relocate: "no"
+  remote_preference: "remote"
+
+summary: >-
+  Data engineer with eight years building batch and streaming pipelines for analytics and
+  operations teams. Known for turning brittle nightly jobs into observable, tested systems
+  and for documentation that other teams actually use.
+
+headline: "Senior Data Engineer"
+
+experience:
+  - employer: "Bramblecone Health Analytics"
+    title: "Senior Data Engineer"
+    location: "Remote"
+    start: "2021-04"
+    end: "present"
+    core: true
+    bullets:
+      - "Rebuilt the claims ingestion pipeline on an event-driven design, cutting end-to-end latency from 26 hours to 40 minutes."
+      - "Introduced data contracts and schema tests for 30+ upstream feeds, reducing broken dashboards from weekly to under one per quarter."
+      - "Led a team of four engineers through a warehouse migration completed two weeks early with zero reporting downtime."
+      - "Wrote the on-call runbook and alerting standards later adopted by three other engineering teams."
+      - "Mentored two junior engineers to promotion within 18 months."
+  - employer: "Quillfeather Logistics"
+    title: "Data Engineer"
+    location: "Lakeview, CO"
+    start: "2018-01"
+    end: "2021-03"
+    core: true
+    bullets:
+      - "Built the shipment-tracking data model used by operations, finance and customer support."
+      - "Replaced a hand-maintained spreadsheet forecast with a scheduled model, improving weekly volume accuracy by 18%."
+      - "Cut monthly cloud spend by 31% by partitioning hot tables and retiring unused jobs."
+      - "Automated carrier invoice reconciliation, saving the finance team about 20 hours a month."
+  - employer: "Lumen & Ledger Consulting"
+    title: "Analytics Associate"
+    location: "Lakeview, CO"
+    start: "2016-06"
+    end: "2017-12"
+    core: false
+    bullets:
+      - "Delivered reporting and KPI dashboards for twelve small-business clients."
+      - "Standardized the firm's SQL style guide and review checklist."
+
+education:
+  - institution: "Western Plains State University"
+    degree: "B.S. Applied Mathematics"
+    location: "Lakeview, CO"
+    end: "2016"
+    details:
+      - "Minor in Computer Science"
+
+skills:
+  - group: "Languages"
+    items: ["Python", "SQL", "Scala", "Bash"]
+  - group: "Data"
+    items: ["Spark", "Kafka", "dbt", "Airflow", "Postgres", "Snowflake"]
+  - group: "Practices"
+    items: ["Data contracts", "Observability", "CI/CD", "Technical writing"]
+
+certifications:
+  - name: "Cloud Data Engineer Professional"
+    issuer: "Example Cloud Academy"
+    year: "2022"
+
+links:
+  linkedin: "https://www.linkedin.com/in/example-robin-testwell"
+  github: "https://github.com/example-robin-testwell"
+  portfolio: "https://robin.example.com"
+  other: []
+
+answers:
+  salary_expectation: ""
+  notice_period: "Two weeks"
+  how_did_you_hear: "Company careers page"
+  eeo:
+    gender: "decline"
+    race_ethnicity: "decline"
+    veteran_status: "decline"
+    disability_status: "decline"
+
+already_applied: []

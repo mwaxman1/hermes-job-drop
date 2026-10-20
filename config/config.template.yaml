@@ -1,0 +1,63 @@
+# hermes-job-drop — model slot config.
+#
+# Installed to ~/.hermes/jobdrop/config.yaml. Edit THAT copy, never this template.
+#
+# You choose a model for each of the six jobs below. There is NO default model: every slot
+# must name its own `model` and `provider`, or the kit refuses to run and tells you which
+# slot to fill in. Leaving a slot blank is an error on purpose.
+#
+# Per-slot keys:
+#   model        REQUIRED  the provider's model id, e.g. a Claude, GPT, Gemini or local model
+#   provider     REQUIRED  anthropic | openai | openrouter | google | groq | mistral |
+#                          deepseek | xai | ollama | any name + base_url (OpenAI-compatible)
+#   base_url     optional  custom endpoint; defaults to the provider's public API
+#   api_key_env  optional  NAME of the env var holding the key (never the key itself);
+#                          defaults to the provider's usual one, e.g. ANTHROPIC_API_KEY
+#   temperature  optional  0..2
+#   command      optional  a shell command that starts an external driver (e.g. a coding
+#                          agent you already run). When set it wins over model/provider for
+#                          that slot. Mostly useful for `browser`.
+#
+# Check your choices with:  python3 ~/.hermes/skills/hermes-job-drop/scripts/config.py --doctor
+version: 1
+models:
+  # vision — reads screenshots and page images: perceives the shape of an application form.
+  # Needs: image input.
+  vision:
+    model: ""
+    provider: ""
+    # api_key_env: ""
+    temperature: 0.2
+
+  # tooling — tool-calling model for deterministic mechanics: matching form fields and
+  # dropdown options to your profile, ledger writes. Needs: function calling.
+  tooling:
+    model: ""
+    provider: ""
+
+  # browser — drives the browser: reads the form, decides the next action, clicks and types,
+  # submits. Needs: tools + vision + long context. May use `command:` instead of a model.
+  browser:
+    model: ""
+    provider: ""
+    # command: "my-agent --headed"
+
+  # python — writes or adapts a small Python helper when a portal needs a mechanical step
+  # (e.g. a stubborn file upload). Needs: code + tool use.
+  python:
+    model: ""
+    provider: ""
+
+  # resume — tailors the resume: selects among your verified bullets and writes the summary
+  # line for a given job. Needs: text + careful instruction following.
+  resume:
+    model: ""
+    provider: ""
+    temperature: 0.3
+
+  # cover_letter — writes the cover letter body for a given job, through the letter gates.
+  # Needs: long-form writing + strict JSON output.
+  cover_letter:
+    model: ""
+    provider: ""
+    temperature: 0.6
