@@ -182,7 +182,64 @@ models:
 
 ## 5. User-supplied inputs
 
-The kit ships **templates**; the user supplies **content**. Three user-owned inputs:
+The kit ships **templates**; the user supplies **content**. The user points the kit at a
+**folder of their own professional material** — a personal "profile repo" they already keep —
+and the kit builds a tailored resume and cover letter from it.
+
+### 5.0 The input: a user-owned profile folder (the "profile repo")
+
+**The user provides a FOLDER (or a git repo) containing their own professional material.**
+The kit must accept an arbitrary directory of mixed files and extract what it needs. This is
+the key to "up and running quickly": the friend does NOT hand-author a YAML file. He points
+the kit at the folder where his resumes and documents already live, and the kit reads it.
+
+**Supported input files (all optional; the kit uses whatever is present):**
+
+- `*.pdf` — existing resumes, and any PDF whose text is extractable. **This is the primary
+  input.** A friend already has 2–5 resumes; that is the corpus.
+- `*.docx` / `*.odt` / `*.md` / `*.txt` — cover letters, writing samples, work samples.
+- `*.html` — an existing resume exported to HTML (very common, and the easiest to parse).
+- `*.yaml` / `*.json` — if the user already has structured profile data, it is used directly
+  and takes precedence over extraction.
+
+**Extraction pipeline (`scripts/ingest_profile.py`):**
+1. Walk the folder, classify each file by type.
+2. Extract text (PDF via `pypdf`/`pdfplumber` fallback, DOCX via `python-docx`, HTML via a
+   simple stripper, MD/TXT directly).
+3. Segment the extracted text into: **contact block**, **summary**, **roles** (employer, title,
+   dates, bullets), **education**, **skills**, **links**.
+4. Merge all files into one **profile draft** at `~/.hermes/jobdrop/profile.yaml`.
+5. **NEVER invent.** A field that cannot be grounded in the extracted text stays empty and is
+   reported to the user as "needs your input" — with the exact field. A contact block that is
+   not found is a question, not a guess.
+
+**The output of ingestion is a DRAFT, and the user reviews it.** The kit writes the draft and
+prints a short report of what it found and what it could not find. The user edits
+`profile.yaml` once, and that becomes the verified source of truth for every future
+application. This is the one manual step, and it is one-time.
+
+**Folder layout the kit reads (any of these):**
+
+```
+~/my-career/                       # anything the user points at
+├── resume.pdf                     # primary source
+├── resume_2023.pdf
+├── cover_letter.pdf
+├── work/
+│   └── project_one.docx
+└── profile.yaml                   # optional, takes precedence if present
+```
+
+**Also accepted: a "base" resume + cover letter as TEMPLATES.** If the user supplies a base
+resume, the kit may adopt its *structure* (section order, heading names) for the generated
+document, while the *content* comes from the verified profile. The user can also supply a base
+cover letter whose tone/structure is mirrored. This is a documented option, not a requirement.
+
+**Sourcing-samples / writing samples are OPTIONAL and never required.** If the user supplies
+writing samples, the `cover_letter` slot may use them as a style reference (tone, register,
+sentence length). The kit must work with ZERO writing samples — cover-letter quality comes
+from the profile + JD + the cover-letter gates, not from a style corpus. Do not build a
+fine-tuning path; the model is used as-is, with the samples as optional few-shot context.
 
 ### 5.1 `~/.hermes/jobdrop/profile.yaml` — the verified profile
 The single source of truth for every claim the kit may make about the user. Schema is
@@ -196,11 +253,22 @@ what is in this file. A JD may *select* among the user's verified bullets; it ma
 silently omitting it. Silent omission is the exact failure mode this design exists to prevent.
 
 ### 5.2 Resume template — `~/.hermes/jobdrop/templates/resume.html`
-HTML + CSS, WeasyPrint-renderable, with `{{PLACEHOLDER}}` tokens the builder substitutes.
+HTML + CSS, renderable to PDF, with `{{PLACEHOLDER}}` tokens the builder substitutes.
 The shipped default template is a clean, ATS-friendly, single-column, print-ready document.
 The user may replace it wholesale; the builder only requires that the template contain the
 tokens the builder knows how to fill, and it must WARN (not fail) if the user's template
 contains a token the builder does not know — otherwise a typo silently drops a section.
+
+**PDF RENDERING — Chrome, not WeasyPrint.** Render the template to PDF with the user's own
+Chrome via `chrome --headless --print-to-pdf`. Rationale: the kit already requires Chrome for
+the form-driving half, so this adds ZERO new system dependencies. WeasyPrint would require
+pango/cairo/gdk-pixbuf system libraries, which is the single biggest setup tax for a new user
+and is not worth it. The renderer must support both paths (Chrome preferred, WeasyPrint
+fallback) but the DEFAULT and the documented path is Chrome.
+
+Chrome must be launched with an isolated `--user-data-dir` (a throwaway dir is correct HERE —
+this is a render-only process, not a logged-in session) and `--no-sandbox` where needed, and it
+must be given a timeout so a hung Chrome cannot wedge the run.
 
 ### 5.3 Cover-letter template — `~/.hermes/jobdrop/templates/cover_letter.md`
 A Markdown template with `{{PLACEHOLDER}}` tokens (e.g. `{{GREETING}}`, `{{OPENING}}`,
@@ -249,6 +317,7 @@ hermes-job-drop/
 │   ├── config.py
 │   ├── llm.py
 │   ├── profile.py
+│   ├── ingest_profile.py
 │   ├── field_matching.py
 │   ├── build_resume.py
 │   ├── build_cover_letter.py
@@ -259,6 +328,7 @@ hermes-job-drop/
 └── tests/
     ├── test_config.py
     ├── test_profile.py
+    ├── test_ingest_profile.py
     ├── test_resume.py
     ├── test_cover_letter.py
     ├── test_ledger.py
@@ -369,11 +439,11 @@ Deliver: repo skeleton, `README.md`, `INSTALL.md`, `LICENSE`, `.gitignore`, CI w
 `scripts/audit_no_personal_data.py`, `scripts/config.py`, and `tests/test_audit.py` +
 `tests/test_config.py`.
 
-### Slice 2 — the engine: resume, cover letter, ledger, JD extraction, the skill's run path
-Deliver: `scripts/profile.py`, `scripts/llm.py`, `scripts/field_matching.py`,
-`scripts/build_resume.py`, `scripts/build_cover_letter.py`, `scripts/jd_extract.py`,
-`scripts/ledger.py`, the remaining tests, and the SKILL.md update that binds the engine to
-the doctrine (with the exact commands).
+### Slice 2 — the engine: profile ingestion, resume, cover letter, ledger, JD extraction
+Deliver: `scripts/ingest_profile.py`, `scripts/profile.py`, `scripts/llm.py`,
+`scripts/field_matching.py`, `scripts/build_resume.py`, `scripts/build_cover_letter.py`,
+`scripts/jd_extract.py`, `scripts/ledger.py`, the remaining tests, and the SKILL.md update
+that binds the engine to the doctrine (with the exact commands).
 
 ### Slice 3 — OPTIONAL, only if Slice 2 lands green and time allows
 `scripts/chrome_cdp.py` fallback driver + a real end-to-end run against a scratch ATS.
@@ -411,10 +481,23 @@ the doctrine (with the exact commands).
 - [ ] Every file in the repo is either code, docs, a template, or a fictional example.
 
 ### Slice 2
+- [ ] `ingest_profile.py` reads a FOLDER of mixed files (a PDF resume + a DOCX cover letter +
+      a TXT file) and produces a profile draft with contact block, summary, roles, education,
+      skills, links — and a report naming every field it could NOT ground. It must NEVER
+      invent a contact detail: with a PDF that has no email, the draft's email is empty and
+      the report says so.
+- [ ] `ingest_profile.py` is idempotent: running it twice on the same folder produces the
+      same draft.
+- [ ] `ingest_profile.py` accepts a folder that already contains a `profile.yaml` and uses
+      it as-is (structured data takes precedence over extraction).
 - [ ] `build_resume.py` renders a **real PDF** from `examples/example_profile.yaml` +
-      `templates/resume.html` via WeasyPrint, with zero personal data, and the PDF is
-      non-trivial (>1 page or a full page of content). The test asserts the PDF is valid and
-      contains the example persona's name.
+      `templates/resume.html` via the **Chrome** renderer, with zero personal data, and the
+      PDF is non-trivial (>1 page or a full page of content). The test asserts the PDF is
+      valid and contains the example persona's name.
+- [ ] The Chrome renderer path is proven: the test renders to a real PDF and asserts the
+      file is a valid PDF. If Chrome is unavailable in the test environment, the test must
+      fall back to WeasyPrint if importable, and otherwise SKIP with a clear reason — it
+      must not fail silently.
 - [ ] The resume build **fails loudly** when the profile is missing a required core role
       (test asserts a non-zero exit and a message naming the missing role) — never a silent
       omission.
