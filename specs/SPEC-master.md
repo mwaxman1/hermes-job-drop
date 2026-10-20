@@ -1,6 +1,6 @@
 # SPEC — hermes-job-drop (public, redistributable)
 
-Status: DESIGN. Owner: Mike Waxman. Target: a PUBLIC GitHub repo a non-author can clone
+Status: DESIGN. Owner: the kit author. Target: a PUBLIC GitHub repo a non-author can clone
 and run against Hermes + Discord in minutes, with ZERO of the author's personal data in it.
 
 ---
@@ -63,10 +63,10 @@ and are the reusable parts. Read them from the source tree; **copy the technique
 | The ATS-form-shape knowledge (per-ATS commit recipes, upload traps, confirmation routes) | YES — the highest-value asset | `references/ats-form-shapes.md` and siblings. Generalized: no personal answers, no personal URLs, no personal locations; described as *shape* + *recipe*, not *the author's transaction*. |
 | The submission-recording discipline (evidence shape, readback) | YES | `references/submission-recording.md` + `scripts/ledger.py`. |
 | The Discord drop-lane plumbing (cursor ingest, reaction acks, per-day thread) | MAYBE | Not the primary path. See §7.1 — the mention-triggered gateway path replaces it. A ledger + ack-reaction is kept. |
-| The live Postgres schema (Neon, `jobhunt.*` schema) | NO — over-built for a single user | Replaced with a local SQLite ledger (§7.5). |
+| The live Postgres schema (hosted Postgres) | NO — over-built for a single user | Replaced with a local SQLite ledger (§7.5). |
 | The author's `data/*.yaml` (profile, answer bank, targets, campaigns) | **NO — PERSONAL** | Never read into this repo. See §3. |
 
-**DO NOT READ THE SOURCE TREE.** The source lane lives at `/home/mike/projects/jobhunt`. This
+**DO NOT READ THE SOURCE TREE.** The source lane lives outside this repo (its path is deliberately not recorded). This
 repo's builder MUST NOT open it, grep it, or copy from it. Reason: the source tree contains
 the author's personal data, and a single read is a channel through which that data could leak
 into a public repo. **This spec is the complete input.** Everything the builder needs —
@@ -526,7 +526,7 @@ that binds the engine to the doctrine (with the exact commands).
 ## 10. Verification discipline for the builder
 
 - Never assert a build succeeded from an exit code alone — read the output.
-- The `cc` wrapper's `cost=` figure is not money spent on a subscription lane; never report
+- A coding-agent wrapper's `cost=` figure is not money spent on a subscription lane; never report
   it as spend.
 - Do not claim a file exists because a tool said it wrote it — read it back.
 - The audit must be run and shown green before any push to a public remote.
